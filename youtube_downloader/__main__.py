@@ -11,9 +11,6 @@ def main():
     app.setFont(10)
     app.setIcon('icon.gif')
 
-    app.EVENT_SIZE = 10000000
-    app.EVENT_SPEED = 0
-
     app.addLabel('title', 'Youtube Downloader')
     app.setLabelBg('title', 'red')
     app.addWebLink('Make sure to check out this project at Github!', 'https://github.com/avv73/youtube-downloader')
