@@ -9,6 +9,9 @@ def changeProgressBar(app, chunk, file_handle, bytes_remaining):
     percentage = -percentage
     app.setMeter('progress', percentage, text='{:.1f}%'.format(percentage)) # remove enqueue? Queue gets full by this call maybe? ...
 
+def notifyCompletedDownload(app, stream):
+    app.infoBox('Download complete', 'The video {} has been successfully downloaded!'.format(stream.title))
+
 def downloadResource(app):
     file_path = app.getEntry('savepath')
     stream_option_raw = app.getOptionBox('Resolution options')
@@ -18,10 +21,13 @@ def downloadResource(app):
         app.errorBox('Error', 'Please provide download directory!')
         return
 
-    # See if below code works...
-    app.thread(handler.downloadResource, stream_option, file_path, lambda ch, fh, by_r : app.queueFunction(changeProgressBar, app, ch, fh, by_r))   
-   #app.thread(handler.downloadResource, stream_option, file_path, lambda ch, fh, by_r : changeProgressBar(app, ch, fh, by_r))
-    #app.setMeter('progress', 100.0, text='Download complete!')
+    # Check if below code works...
+    #app.thread(handler.downloadResource, stream_option, file_path, 
+    #    lambda ch, fh, by_r : app.queueFunction(changeProgressBar, app, ch, fh, by_r), 
+    #   lambda strm, pth : app.queueFunction(notifyCompletedDownload, app, strm))   
+    app.thread(handler.downloadResource, stream_option, file_path, 
+        lambda ch, fh, by_r : changeProgressBar(app, ch, fh, by_r),
+        lambda strm, pth : notifyCompletedDownload(app, strm))
 
 def refreshInfo(app):
     app.changeOptionBox('Resolution options', handler.fetchResolutionOptions())

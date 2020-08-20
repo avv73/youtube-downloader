@@ -46,9 +46,10 @@ class RequestHandler:
                 self.requester_obj.length//60, self.requester_obj.length-60*(self.requester_obj.length//60)
             )
     
-    def downloadResource(self, stream_option, save_path, progress_func):
+    def downloadResource(self, stream_option, save_path, progress_func, notify_func):
         if isinstance(self.requester_obj, YouTube):
             self.requester_obj.register_on_progress_callback(progress_func)
+            self.requester_obj.register_on_complete_callback(notify_func)
             self.requester_obj.streams[stream_option].download(save_path)
 
 if __name__ == '__main__':

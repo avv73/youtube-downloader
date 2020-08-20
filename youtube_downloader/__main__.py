@@ -12,7 +12,7 @@ def main():
     app.setIcon('icon.gif')
 
     app.EVENT_SIZE = 10000000
-    app.EVENT_SPEED = 0
+    app.EVENT_SPEED = 1
 
     app.addLabel('title', 'Youtube Downloader')
     app.setLabelBg('title', 'red')
@@ -34,6 +34,7 @@ def main():
     app.addMeter('progress')
     app.setMeterFill('progress', 'green')
     app.setMeter('progress', 0.0, 'Waiting for download...')
+
     app.go()
 
 if __name__ == '__main__':
