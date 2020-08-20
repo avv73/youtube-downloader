@@ -44,3 +44,6 @@ def updateInfo(app):
         pass
     except Exception as e:
         app.errorBox('Fatal error', 'Unknown fatal error occured: ' + e.message)
+
+if __name__ == '__main__':
+    print('This is a library class and cannot be executed')

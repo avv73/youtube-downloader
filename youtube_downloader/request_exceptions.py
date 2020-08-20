@@ -9,3 +9,6 @@ class InvalidPlaylistURLException(Exception):
         super().__init__(message, errors)
         self.errors = errors
         self.message = message
+
+if __name__ == '__main__':
+    print('This is a library class and cannot be executed')
