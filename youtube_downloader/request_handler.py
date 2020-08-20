@@ -1,6 +1,7 @@
 import request_exceptions
 import importlib
 import pytube.exceptions
+import threading
 from pytube import Playlist
 from pytube import YouTube
 
@@ -40,7 +41,7 @@ class RequestHandler:
     
     def fetchInfo(self):
         if isinstance(self.requester_obj, YouTube):
-            return 'Title: {}\nAuthor: {}\nDuration:{}:{}'.format(
+            return 'Title: {}\nAuthor: {}\nDuration:{:02}:{:02}'.format(
                 self.requester_obj.title, self.requester_obj.author, 
                 self.requester_obj.length//60, self.requester_obj.length-60*(self.requester_obj.length//60)
             )
@@ -50,8 +51,12 @@ class RequestHandler:
             self.requester_obj.register_on_progress_callback(progress_func)
             self.requester_obj.streams[stream_option].download(save_path)
 
+if __name__ == '__main__':
+    print('This is a library class and cannot be executed')
+
 #rq = RequestHandler('https://www.youtube.com/watch?v=VsZLFqE_iLc', 'Video')
 #list_stream = rq.fetchResolutionOptions()
 #print(list_stream)
 
 #rq = YouTube('https://www.youtube.com/watch?v=VsZLFqE_iLc')
+#rq.streams[0].title()

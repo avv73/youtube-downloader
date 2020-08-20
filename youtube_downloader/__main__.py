@@ -1,7 +1,9 @@
 import appJar
+import os.path
 from request_handler import RequestHandler
 import request_exceptions
 import re
+import time
 
 # Develop video download feature, with resolution select, download path and progress bar.
 # Then focus on playlist implementation, library class is broken? Use Youtube API to fetch 
@@ -11,12 +13,7 @@ handler = None
 def changeProgressBar(app, chunk, file_handle, bytes_remaining):
     percentage = (bytes_remaining * 1.0 / chunk.filesize * 100) - 99.99
     percentage = -percentage
-    if percentage == 100:
-        app.setMeter('progress', percentage, text='Download complete!')
-    else:
-        app.setMeter('progress', percentage, text='Download in progress...')
-
-    
+    app.setMeter('progress', percentage, text='{:.1f}%'.format(percentage)) # remove enqueue? Queue gets full by this call maybe? ...
 
 def downloadResource(app):
     file_path = app.getEntry('savepath')
@@ -27,7 +24,10 @@ def downloadResource(app):
         app.errorBox('Error', 'Please provide download directory!')
         return
 
-    handler.downloadResource(stream_option, file_path, lambda ch, fh, by_r : changeProgressBar(app, ch, fh, by_r))
+    # See if below code works...
+    app.thread(handler.downloadResource, stream_option, file_path, lambda ch, fh, by_r : app.queueFunction(changeProgressBar, app, ch, fh, by_r))   
+   #app.thread(handler.downloadResource, stream_option, file_path, lambda ch, fh, by_r : changeProgressBar(app, ch, fh, by_r))
+    #app.setMeter('progress', 100.0, text='Download complete!')
 
 def refreshInfo(app):
     app.changeOptionBox('Resolution options', handler.fetchResolutionOptions())
@@ -46,6 +46,8 @@ def updateInfo(app):
         app.errorBox('Error', 'An error occured: ' + e.message)
     except request_exceptions.InvalidPlaylistURLException as e:
         app.errorBox('Error', 'An error occured: ' + e.message)
+    except AttributeError as e: # Should fix attribute error exception?
+        pass
     except Exception as e:
         app.errorBox('Fatal error', 'Unknown fatal error occured: ' + e.message)
 
@@ -57,7 +59,7 @@ def main():
 
     app.addLabel('title', 'Youtube Downloader')
     app.setLabelBg('title', 'red')
-    app.addWebLink('Make sure to check out this project at Github!', 'https://github.com/avv73/...')
+    app.addWebLink('Make sure to check out this project at Github!', 'https://github.com/avv73/youtube-downloader')
 
     app.addRadioButton('type', 'Video')
     app.addRadioButton('type', 'Playlist')

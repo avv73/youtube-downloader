@@ -18,7 +18,8 @@ i = 0
 
 for stream_str in available_streams_list:
     print('[{}] Resolution: {}, type: {}, fps: {}, audio: {}, video: {}'.format(
-        i+1, stream_str.resolution, stream_str.mime_type, stream_str.fps, stream_str.includes_audio_track, stream_str.includes_video_track))
+        i+1, stream_str.resolution, stream_str.mime_type, stream_str.fps, 
+        stream_str.includes_audio_track, stream_str.includes_video_track))
     i += 1
 
 stream_index = -1
