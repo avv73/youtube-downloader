@@ -12,7 +12,7 @@ def main():
     app.setIcon('icon.gif')
 
     app.EVENT_SIZE = 10000000
-    app.EVENT_SPEED = 1
+    app.EVENT_SPEED = 0
 
     app.addLabel('title', 'Youtube Downloader')
     app.setLabelBg('title', 'red')
@@ -27,7 +27,6 @@ def main():
 
     app.addLabelOptionBox('Resolution options', [])
     app.addMessage('resourceInfo', 'Waiting for input...')
-    
     app.addButtons(['Check Link', 'Download'], [lambda : gui_controller.updateInfo(app), lambda : gui_controller.downloadResource(app)])
     app.setButtonState('Download', 'disabled')
 
