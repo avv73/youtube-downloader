@@ -17,8 +17,16 @@ def changeProgressBar(app, chunk, file_handle, bytes_remaining):
 def notifyCompletedDownload(app, stream):    
     #while not app.eventQueue.empty():
     #    app.eventQueue.get()
-    app.setMeter('progress', 100.0, text='Download complete!')
+    app.setMeter('progress', 100, text='Download complete!')
     app.infoBox('Download complete', 'The video {} has been successfully downloaded!'.format(stream.title))
+
+    app.setButtonState('Download', 'enabled')
+    app.setButtonState('Check Link', 'enabled')
+
+    app.setStopFunction(lambda : True)
+
+def confirmExitOnDownload(app):
+    return app.yesNoBox('Confirm Exit', 'Download is still in progress. Are you sure you want to exit the application?')
 
 def downloadResource(app):
     file_path = app.getEntry('savepath')
@@ -33,6 +41,11 @@ def downloadResource(app):
     #app.thread(_handler.downloadResource, stream_option, file_path, 
     #    lambda ch, fh, by_r : app.queueFunction(changeProgressBar, app, ch, fh, by_r), 
     #    lambda strm, pth : notifyCompletedDownload(app, strm))   
+
+    app.setButtonState('Download', 'disabled')
+    app.setButtonState('Check Link', 'disabled')
+
+    app.setStopFunction(lambda : confirmExitOnDownload(app))
 
     app.thread(_handler.downloadResource, stream_option, file_path, 
         lambda ch, fh, by_r : changeProgressBar(app, ch, fh, by_r),

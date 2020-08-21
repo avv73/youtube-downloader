@@ -13,7 +13,7 @@ def main():
     app.addLabel('title', 'Youtube Downloader')
     app.setLabelBg('title', 'red')
     app.addWebLink('Make sure to check out this project at Github!', 'https://github.com/avv73/youtube-downloader')
-    
+
     app.addRadioButton('type', 'Video')
     app.addRadioButton('type', 'Playlist')
 
