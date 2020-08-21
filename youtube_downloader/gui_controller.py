@@ -2,16 +2,16 @@ from request_handler import RequestHandler
 import request_exceptions
 import re
 import time
-import math
+import json.decoder
 
-handler = None
+_handler = None
 
 def changeProgressBar(app, chunk, file_handle, bytes_remaining):
-    percentage = (bytes_remaining * 1.0 / chunk.filesize * 100) - 99.99
+    percentage = round((bytes_remaining * 1.0 / chunk.filesize * 100) - 99.99)
     percentage = -percentage
 
-    if (int(math.ceil(percentage)) % 15 == 0):
-        app.setMeter('progress', percentage, text='{:.1f}%'.format(percentage))
+    if app.getMeter('progress')[1] != '{} %'.format(percentage) and percentage % 20 == 0: #fix this... dont update on 12.1 12.2 12.3 etc.. but on 12 24 ...
+        app.setMeter('progress', percentage, text='{} %'.format(percentage))
         time.sleep(0.00001)
 
 def notifyCompletedDownload(app, stream):    
@@ -30,17 +30,17 @@ def downloadResource(app):
         return
 
     # Check if below code works...
-    #app.thread(handler.downloadResource, stream_option, file_path, 
+    #app.thread(_handler.downloadResource, stream_option, file_path, 
     #    lambda ch, fh, by_r : app.queueFunction(changeProgressBar, app, ch, fh, by_r), 
     #    lambda strm, pth : notifyCompletedDownload(app, strm))   
-    
-    app.thread(handler.downloadResource, stream_option, file_path, 
+
+    app.thread(_handler.downloadResource, stream_option, file_path, 
         lambda ch, fh, by_r : changeProgressBar(app, ch, fh, by_r),
         lambda strm, pth : notifyCompletedDownload(app, strm))
 
-def refreshInfo(app):
-    app.changeOptionBox('Resolution options', handler.fetchResolutionOptions())
-    app.setMessage('resourceInfo', handler.fetchInfo())  
+def _refreshInfo(app):
+    app.changeOptionBox('Resolution options', _handler.fetchResolutionOptions())
+    app.setMessage('resourceInfo', _handler.fetchInfo())  
     app.setButtonState('Download', 'active')
 
 def updateInfo(app):
@@ -48,9 +48,9 @@ def updateInfo(app):
     link_address = app.getEntry('Link')
 
     try:
-        global handler
-        handler = RequestHandler(link_address, link_type)
-        refreshInfo(app)
+        global _handler
+        _handler = RequestHandler(link_address, link_type)
+        _refreshInfo(app)
     except request_exceptions.InvalidVideoURLException as e:
         app.errorBox('Error', 'An error occured: ' + e.message)
     except request_exceptions.InvalidPlaylistURLException as e:
@@ -58,6 +58,8 @@ def updateInfo(app):
     except AttributeError as e: # Should fix attribute error exception? 'message unknown' ?s
         pass
     except KeyError as e:
+        pass
+    except json.decoder.JSONDecodeError as e:
         pass
     except Exception as e:
         app.errorBox('Fatal error', 'Unknown fatal error occured: ' + e.message)
