@@ -10,18 +10,16 @@ def changeProgressBar(app, chunk, file_handle, bytes_remaining):
     percentage = round((bytes_remaining * 1.0 / chunk.filesize * 100) - 99.99)
     percentage = -percentage
 
-    if app.getMeter('progress')[1] != '{} %'.format(percentage) and percentage % 20 == 0: #fix this... dont update on 12.1 12.2 12.3 etc.. but on 12 24 ...
+    if app.getMeter('progress')[1] != '{} %'.format(percentage) and percentage % 20 == 0: 
         app.setMeter('progress', percentage, text='{} %'.format(percentage))
         time.sleep(0.00001)
 
-def notifyCompletedDownload(app, stream):    
-    #while not app.eventQueue.empty():
-    #    app.eventQueue.get()
+def notifyCompletedDownload(app, stream):   
     app.setMeter('progress', 100, text='Download complete!')
     app.infoBox('Download complete', 'The video {} has been successfully downloaded!'.format(stream.title))
 
-    app.setButtonState('Download', 'enabled')
-    app.setButtonState('Check Link', 'enabled')
+    app.setButtonState('Download', 'active')
+    app.setButtonState('Check Link', 'active')
 
     app.setStopFunction(lambda : True)
 
@@ -52,7 +50,7 @@ def downloadResource(app):
         lambda strm, pth : notifyCompletedDownload(app, strm))
 
 def _refreshInfo(app):
-    app.changeOptionBox('Resolution options', _handler.fetchResolutionOptions())
+    app.changeOptionBox('Resolution options', _handler.fetchResolutionOptions(app.getCheckBox('Audio Only')))
     app.setMessage('resourceInfo', _handler.fetchInfo())  
     app.setButtonState('Download', 'active')
 
@@ -75,7 +73,8 @@ def updateInfo(app):
     except json.decoder.JSONDecodeError as e:
         pass
     except Exception as e:
-        app.errorBox('Fatal error', 'Unknown fatal error occured: ' + e.message)
+        raise e
+        #app.errorBox('Fatal error', 'Unknown fatal error occured! Please contact developer!')
 
 if __name__ == '__main__':
     print('This is a library class and cannot be executed')

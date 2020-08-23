@@ -16,6 +16,7 @@ def main():
 
     app.addRadioButton('type', 'Video')
     app.addRadioButton('type', 'Playlist')
+    app.addCheckBox('Audio Only')
 
     app.addLabelEntry('Link')
     app.addLabel('Directory to save file:')
