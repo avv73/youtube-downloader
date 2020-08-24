@@ -6,10 +6,10 @@ from pytube import Playlist
 from pytube import YouTube
 
 class RequestHandler:
-    __requester_obj = None
-    __streams_list = []
-
     def __init__(self, link_address, link_type):
+        self.__requester_obj = None
+        self.__streams_list = []
+
         link_type = 'YouTube' if link_type == 'Video' else link_type
         SubstClass = getattr(importlib.import_module('pytube'), link_type)
 
