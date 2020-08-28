@@ -2,16 +2,17 @@ import googleapiclient.discovery
 from urllib.parse import parse_qs, urlparse
 from pytube import YouTube
 
-class VideoPlaylist:
-    __api_key = ''
+__api_key__ = ''
 
+class VideoPlaylist:
+    
     @property
     def video_count(self) -> int:
         return len(self.__list_objects)
 
     def __initialize_object_list(self):
         #API Calls
-        youtube = googleapiclient.discovery.build("youtube", "v3", developerKey = __api_key)
+        youtube = googleapiclient.discovery.build("youtube", "v3", developerKey = __api_key__)
         request = youtube.playlistItems().list(
             part = "snippet",
             playlistId = self.id,
