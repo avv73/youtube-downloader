@@ -3,7 +3,7 @@ from urllib.parse import parse_qs, urlparse
 from pytube import YouTube
 
 class VideoPlaylist:
-    __api_key__ = ''
+    __api_key = ''
 
     @property
     def video_count(self) -> int:
@@ -11,7 +11,7 @@ class VideoPlaylist:
 
     def __initialize_object_list(self):
         #API Calls
-        youtube = googleapiclient.discovery.build("youtube", "v3", developerKey = __api_key__)
+        youtube = googleapiclient.discovery.build("youtube", "v3", developerKey = __api_key)
         request = youtube.playlistItems().list(
             part = "snippet",
             playlistId = self.id,
