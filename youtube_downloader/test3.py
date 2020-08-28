@@ -10,7 +10,7 @@ youtube_link = input('Please input YouTube video link: ')
 
 yt = pytube.YouTube(youtube_link)
 
-available_streams_list = yt.streams.filter(only_audio = True)
+available_streams_list = yt.streams.filter(custom_filter_functions=[lambda s : s.resolution == '360p' or s.resolution == '480p' or s.resolution == '240p']).order_by('resolution').desc()
 # menu and stuff....
 
 print('Available resolutions:')
