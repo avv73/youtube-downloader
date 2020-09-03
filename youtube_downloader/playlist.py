@@ -1,6 +1,8 @@
 import googleapiclient.discovery
+import json
 from urllib.parse import parse_qs, urlparse
 from pytube import YouTube
+import os
 
 __api_key__ = ''
 
@@ -30,6 +32,13 @@ class VideoPlaylist:
             current_obj = YouTube('https://youtube.com/watch?v={}'.format(item['snippet']['resourceId']['videoId']))
             self.__list_objects.append(current_obj)
 
+    def __read_api_key(self):
+        path = os.path.dirname(__file__)
+        file_path = os.path.join(path, 'secret.json')
+        file_decode = json.load(open(file_path))
+        global __api_key__
+        __api_key__ = file_decode["API_Key"]
+
     def __fetch_info(self):
         youtube = googleapiclient.discovery.build('youtube', 'v3', developerKey = __api_key__, cache_discovery=False)
 
@@ -48,6 +57,7 @@ class VideoPlaylist:
         self.url = url
         self.id = parse_qs(urlparse(url).query, keep_blank_values=True)['list'][0]
         self.__list_objects = []
+        self.__read_api_key()
         self.__initialize_object_list()
         self.__notify_func = lambda : True
 

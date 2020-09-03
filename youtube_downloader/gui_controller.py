@@ -73,8 +73,7 @@ def updateInfo(app):
     except json.decoder.JSONDecodeError as e:
         pass
     except Exception as e:
-        raise e
-        #app.errorBox('Fatal error', 'Unknown fatal error occured! Please contact developer!')
+        app.errorBox('Fatal error', 'Unknown fatal error occured! Please contact developer!')
 
 if __name__ == '__main__':
     print('This is a library class and cannot be executed')
