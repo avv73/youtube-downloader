@@ -16,7 +16,7 @@ def changeProgressBar(app, chunk, file_handle, bytes_remaining):
 
 def notifyCompletedDownload(app, stream):   
     app.setMeter('progress', 100, text='Download complete!')
-    app.infoBox('Download complete', 'The video {} has been successfully downloaded!'.format(stream.title))
+    app.infoBox('Download complete', 'The resource {} has been successfully downloaded!'.format(stream.title))
 
     app.setButtonState('Download', 'active')
     app.setButtonState('Check Link', 'active')

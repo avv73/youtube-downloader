@@ -63,16 +63,27 @@ class VideoPlaylist:
     def register_on_complete_callback(self, notify_func):
         self.__notify_func = notify_func
 
+    def fetch_available_streams(self, is_audio_only):
+        res_list = []
+        if is_audio_only:
+            res_list.append('[2] Audio Only')
+            self.__selected_stream = 2
+        else:
+            res_list.append('[1] Highest possible resolution w/ audio')
+            self.__selected_stream = 1
+        
+        return res_list
+
     def download(self, stream_option, save_path):
-        #  stream options: 1 Highest definition with audio, 2 audio only
+        #  stream options: 0 Highest definition with audio, 1 audio only
         streams_list = []
 
         for yt_inst in self.__list_objects:
             selected_stream = ''
 
-            if stream_option == 1:
+            if stream_option == 0:
                 selected_stream = yt_inst.streams.filter(progressive=True).order_by('resolution').desc()[0]
-            elif stream_option == 2:
+            elif stream_option == 1:
                 selected_stream = yt_inst.streams.filter(only_audio=True)[0]
        
             streams_list.append(selected_stream)
@@ -80,15 +91,10 @@ class VideoPlaylist:
         for stream in streams_list:
             stream.download(save_path)
         
-        self.__notify_func(self.title, save_path)
-        #TODO: self.title correct argument??
+        anon = type('', (object,), {'title':self.title})()
+
+        self.__notify_func(anon, save_path)
 
 
-
-"""pl = VideoPlaylist('https://www.youtube.com/playlist?list=PLiPrjSGafY75weef0DDLPmAUzZPHyj7T_')
-print(pl.video_count)
-print(pl)
-
-pl.download(1, 'C:\\Users\\avv77\\Desktop\\test', '', '')
-"""
-
+if __name__ == '__main__':
+    print('This is a library class and cannot be executed')

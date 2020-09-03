@@ -128,3 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 youtube_downloader/secret.txt
+youtube_downloader/test4.py
