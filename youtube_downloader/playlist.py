@@ -37,7 +37,7 @@ class VideoPlaylist:
         file_path = os.path.join(path, 'secret.json')
         file_decode = json.load(open(file_path))
         global __api_key__
-        __api_key__ = file_decode["API_Key"]
+        __api_key__ = file_decode['API_Key']
 
     def __fetch_info(self):
         youtube = googleapiclient.discovery.build('youtube', 'v3', developerKey = __api_key__, cache_discovery=False)

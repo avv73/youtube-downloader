@@ -31,6 +31,8 @@ def main():
     app.setMeterFill('progress', 'green')
     app.setMeter('progress', 0.0, 'Waiting for download...')
 
+    app.setStartFunction(lambda : gui_controller.checkAPIKey(app))
+
     app.go()
 
 if __name__ == '__main__':

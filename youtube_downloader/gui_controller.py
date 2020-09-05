@@ -2,6 +2,7 @@ from request_handler import RequestHandler
 import request_exceptions
 import re
 import time
+import os
 import json.decoder
 
 _handler = None
@@ -53,6 +54,23 @@ def _refreshInfo(app):
     app.changeOptionBox('Resolution options', _handler.fetchResolutionOptions(app.getCheckBox('Audio Only')))
     app.setMessage('resourceInfo', _handler.fetchInfo())  
     app.setButtonState('Download', 'active')
+
+def checkAPIKey(app):
+    path = os.path.dirname(__file__)
+    file_path = os.path.join(path, 'secret.json')
+    file_decode = json.load(open(file_path))
+    api_readed = file_decode['API_Key']
+
+    if api_readed != '' and api_readed != None:
+        return
+    
+    while api_readed == '' or api_readed == None:
+        api_readed = app.stringBox('API Key Required', 'Please provide Youtube Data v3 API key. Check the instructions in the Github repository on obtaining API key.')
+        data = {}
+        data['API_Key'] = api_readed
+
+    with open(file_path, 'w') as output:
+        json.dump(data, output)
 
 def updateInfo(app):
     link_type = app.getRadioButton('type')
